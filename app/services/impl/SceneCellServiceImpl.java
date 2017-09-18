@@ -34,10 +34,10 @@ public class SceneCellServiceImpl implements SceneCellService {
             for (JsonNode cell : row) {
                 SceneCell sceneCell = new SceneCell();
                 sceneCell.setScene(scene);
-                sceneCell.setName(cell.get("name").asText());
+                sceneCell.setName(cell.has("name") ? cell.get("name").asText("") : "");
                 sceneCell.setArrive(cell.get("arrive").asBoolean());
                 sceneCell.setColor(cell.get("color").asText());
-                sceneCell.setDescription(cell.get("description").asText());
+                sceneCell.setDescription(cell.has("description") ? cell.get("description").asText("") : "");
                 sceneCell.setX(cell.get("x").asInt());
                 sceneCell.setY(cell.get("y").asInt());
                 sceneCellDao.insert(sceneCell);

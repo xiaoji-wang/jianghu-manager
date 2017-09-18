@@ -16,7 +16,11 @@ var app = new Vue({
         offset: true,
         maps: [],
         npc: {talk: []},
-        npcs: []
+        npcs: [],
+        visible: {
+            npcSetting: false,
+            npcList: false
+        }
     },
     computed: {
         lengthen () {
@@ -290,6 +294,63 @@ var app = new Vue({
             }).catch((response) => {
                 this.loading = false
                 this.$message.error({message: '保存失败'});
+            })
+        },
+        openNpcSetting (id) {
+            axios.get('/npc', {params: {id: id}}).then((response)=> {
+                this.npc = response.data
+                this.visible.npcSetting = true
+            })
+        },
+        saveNpc () {
+            this.loading = true
+            axios.post('/npc', this.npc).then((response) => {
+                this.npc.id = response.data.id
+                this.loading = false
+                this.$message({
+                    message: '保存成功', type: 'success'
+                });
+            }).catch((response) => {
+                this.loading = false
+                this.$message.error({message: '保存失败'});
+            })
+        },
+        addNpcTalk () {
+            this.npc.talk.push({word: ''})
+        },
+        deleteNpcTalk (e) {
+            // debugger
+            // e.target.parentNode.parentNode.parentNode.remove();
+            // this.npc.talks.splice(index)
+        },
+        addNpcToCell () {
+            if (!this.npc.id) {
+                this.$message.error({message: 'NPC未保存'});
+                return
+            }
+            let npcs = this.current.npcs.filter((n)=> {
+                if (n.id === this.npc.id) {
+                    return n
+                }
+            })
+            if (npcs.length <= 0) {
+                this.current.npcs.push(this.npc)
+            } else {
+                this.$message({message: 'NPC已添加'});
+            }
+            this.visible.npcSetting = false
+        },
+        handleSelect () {
+            this.npcsDialogVisible = true
+        },
+        selectNpc () {
+
+        },
+        npcsDialogOpen () {
+            axios.get('/npc').then((response) => {
+                response.data.forEach((v)=> {
+                    this.npcs.push(v)
+                })
             })
         },
         getQueryString () {
