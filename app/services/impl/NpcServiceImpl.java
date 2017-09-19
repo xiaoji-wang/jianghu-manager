@@ -36,7 +36,7 @@ public class NpcServiceImpl implements NpcService {
     public Map<String, Object> getNpc(Map<String, String> params) {
         Query<Npc> query = npcDao.get();
         if (params.containsKey("id")) {
-            query.where().eq("id", params.get("id"));
+            query.where().eq("id", Long.parseLong(params.get("id")));
         }
         return query.resultList(params);
     }

@@ -271,6 +271,9 @@ var app = new Vue({
                         if (!cell) {
                             cell = this.createCell()
                         }
+                        if (!cell.npcs) {
+                            cell.npcs = []
+                        }
                         row.push(cell)
                     }
                     this.maps.push(row)
@@ -279,7 +282,7 @@ var app = new Vue({
             })
         },
         createCell () {
-            return {name: '', description: '', arrive: false, startPoint: false, color: '#ddd'}
+            return {name: '', description: '', arrive: false, color: '#ddd', npcs: []}
         },
         save () {
             this.loading = true

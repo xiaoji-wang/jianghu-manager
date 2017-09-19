@@ -1,6 +1,11 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "scene_cell")
@@ -13,6 +18,7 @@ public class SceneCell {
     private Integer y;
     private Boolean arrive;
     private Scene scene;
+    private Set<Npc> npcs = new HashSet<>();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -73,6 +79,7 @@ public class SceneCell {
         this.arrive = arrive;
     }
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "scene_id")
     public Scene getScene() {
@@ -81,5 +88,17 @@ public class SceneCell {
 
     public void setScene(Scene scene) {
         this.scene = scene;
+    }
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "scene_cell_npc",
+            joinColumns = {@JoinColumn(name = "scene_cell_id", referencedColumnName = "scene_cell_id")},
+            inverseJoinColumns = {@JoinColumn(name = "npc_id", referencedColumnName = "character_id")})
+    public Set<Npc> getNpcs() {
+        return npcs;
+    }
+
+    public void setNpcs(Set<Npc> npcs) {
+        this.npcs = npcs;
     }
 }

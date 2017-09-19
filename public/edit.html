@@ -64,12 +64,27 @@
         <template>
             <el-tabs active-name="view">
                 <el-tab-pane label="基本信息" name="view">
-                    <el-input v-model="npc.name" placeholder="名字" icon="search" style="margin-bottom: 10px"
-                              :on-icon-click="handleSelect">
-                    </el-input>
-                    <el-input type="textarea" :rows="4" placeholder="描述" v-model="npc.description"
-                              style="margin-bottom: 10px"></el-input>
-                    <el-input v-model="npc.word" placeholder="对白"></el-input>
+                    <el-row style="margin-bottom: 10px;">
+                        <el-col :span="2" style="padding-left:10px;line-height: 36px;">名字</el-col>
+                        <el-col :span="22">
+                            <el-input v-model="npc.name" placeholder="名字" icon="search" style="margin-bottom: 10px"
+                                      :on-icon-click="handleSelect">
+                            </el-input>
+                        </el-col>
+                    </el-row>
+                    <el-row style="margin-bottom: 10px;">
+                        <el-col :span="2" style="padding-left:10px;line-height: 36px;">描述</el-col>
+                        <el-col :span="22">
+                            <el-input type="textarea" :rows="4" placeholder="描述" v-model="npc.description"
+                                      style="margin-bottom: 10px"></el-input>
+                        </el-col>
+                    </el-row>
+                    <el-row style="margin-bottom: 10px;">
+                        <el-col :span="2" style="padding-left:10px;line-height: 36px;">对白</el-col>
+                        <el-col :span="22">
+                            <el-input v-model="npc.word" placeholder="对白"></el-input>
+                        </el-col>
+                    </el-row>
                 </el-tab-pane>
                 <el-tab-pane label="战斗" name="fight">
                     <el-row style="margin-bottom: 10px;">
