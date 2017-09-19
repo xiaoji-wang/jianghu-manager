@@ -5,7 +5,6 @@ import controllers.base.BaseController;
 import play.data.FormFactory;
 import play.db.jpa.Transactional;
 import play.mvc.Result;
-import services.SceneCellService;
 import services.SceneService;
 
 /**
@@ -17,21 +16,18 @@ public class SceneController extends BaseController {
     private SceneService sceneService;
 
     @Inject
-    private SceneCellService sceneCellService;
-
-    @Inject
     public SceneController(FormFactory factory) {
         super(factory.form());
     }
 
     @Transactional
     public Result getSceneCell(Long id) {
-        return json(sceneCellService.getSceneCell(id, getParams()));
+        return json(sceneService.getSceneCell(id, getParams()));
     }
 
     @Transactional
     public Result createSceneCell(Long id) {
-        sceneCellService.createSceneCell(id, getJsonData());
+        sceneService.createSceneCell(id, getJsonData());
         return success();
     }
 

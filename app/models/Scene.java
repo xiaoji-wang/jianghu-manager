@@ -10,6 +10,8 @@ public class Scene {
     private Long id;
     private String name;
     private String description;
+    private Integer width;
+    private Integer height;
     private Set<SceneCell> sceneCells = new HashSet<>();
 
     @Id
@@ -46,5 +48,21 @@ public class Scene {
 
     public void setSceneCells(Set<SceneCell> sceneCells) {
         this.sceneCells = sceneCells;
+    }
+
+    public Integer getWidth() {
+        return width;
+    }
+
+    public void setWidth(Integer width) {
+        this.width = width;
+    }
+
+    public Integer getHeight() {
+        return height;
+    }
+
+    public void setHeight(Integer height) {
+        this.height = height;
     }
 }

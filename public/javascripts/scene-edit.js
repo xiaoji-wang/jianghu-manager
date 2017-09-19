@@ -13,9 +13,9 @@ var app = new Vue({
             current: {x: 0, y: 0}
         },
         isdblclick: false,
-        offset: true,
+        // offset: true,
         maps: [],
-        npc: {talk: []},
+        npc: {},
         npcs: [],
         visible: {
             npcSetting: false,
@@ -44,13 +44,13 @@ var app = new Vue({
                 return map[this.axisPoint.current.x]
             }
             return {}
-        },
-        minWidth () {
-            return 5
-        },
-        minHeight () {
-            return 5
-        }
+        }//,
+        // minWidth () {
+        //     return 50
+        // },
+        // minHeight () {
+        //     return 50
+        // }
     },
     methods: {
         click (e) {
@@ -82,7 +82,7 @@ var app = new Vue({
                         map.color = '#ddd'
                     }
                     this.isdblclick = false
-                    this.resetCanvasSize(x, y)
+                    // this.resetCanvasSize(x, y)
                 }
             }
             ctx.fillStyle = map.color
@@ -96,130 +96,130 @@ var app = new Vue({
                 this.drawText(ctx, '#27408B', lx, ly, (!map.name || map.name.trim().length === 0) ? x + ',' + y : map.name)
             }
         },
-        resetCanvasSize (x, y) {
-            this.resetCanvasHeightSize(y)
-            this.resetCanvasWidthSize(x)
-        },
-        resetCanvasWidthSize (x) {
-            if (x === 0) {
-                let count = this.maps.filter((r)=> {
-                    if (r[0].arrive) return r[0]
-                }).length
-                if (count > 0) {
-                    this.maps.forEach((r)=> {
-                        r.unshift(this.createCell())
-                    })
-                    this.initCanvasSize()
-                }
-            } else if (x === this.maps[0].length - 1) {
-                let count = this.maps.filter((v)=> {
-                    if (v[x].arrive) return v[x]
-                }).length
-                if (count > 0) {
-                    this.maps.forEach((r)=> {
-                        r.push(this.createCell())
-                    })
-                    this.initCanvasSize()
-                }
-            } else if (x === 1) {
-                while (true) {
-                    if (this.maps[0].length <= this.minWidth) {
-                        break
-                    }
-                    let count = this.maps.filter((v)=> {
-                        if (v[x].arrive) return v[x]
-                    }).length
-                    if (count === 0) {
-                        this.maps.forEach((r)=> {
-                            r.shift()
-                        })
-                        this.initCanvasSize()
-                    } else {
-                        break
-                    }
-                }
-            } else if (x === this.maps[0].length - 2) {
-                let t = x
-                while (true) {
-                    if (this.maps[0].length <= this.minWidth) {
-                        break
-                    }
-                    let count = this.maps.filter((v)=> {
-                        if (v[t].arrive) return v[t]
-                    }).length
-                    if (count === 0) {
-                        this.maps.forEach((r)=> {
-                            r.splice(t + 1, 1)
-                        })
-                        this.initCanvasSize()
-                        t -= 1
-                    } else {
-                        break
-                    }
-                }
-            }
-        },
-        resetCanvasHeightSize (y) {
-            if (y === 0) {
-                let count = this.maps[y].filter((v)=> {
-                    if (v.arrive) return v
-                }).length
-                if (count > 0) {
-                    let row = []
-                    this.maps[y].forEach(()=> {
-                        row.push(this.createCell())
-                    })
-                    this.maps.unshift(row)
-                    this.offset = !this.offset
-                    this.initCanvasSize()
-                }
-            } else if (y === this.maps.length - 1) {
-                let count = this.maps[y].filter((v)=> {
-                    if (v.arrive) return v
-                }).length
-                if (count > 0) {
-                    let row = []
-                    this.maps[y].forEach(()=> {
-                        row.push(this.createCell())
-                    })
-                    this.maps.push(row)
-                    this.initCanvasSize()
-                }
-            } else if (y === 1 && this.maps.length > this.minHeight) {
-                while (true) {
-                    let count = this.maps[1].filter((v)=> {
-                        if (v.arrive) return v
-                    }).length
-                    if (count === 0) {
-                        this.maps.shift()
-                        this.offset = !this.offset
-                    } else {
-                        break
-                    }
-                    if (this.maps.length <= this.minHeight) {
-                        break
-                    }
-                }
-                this.initCanvasSize()
-            } else if (y === this.maps.length - 2 && this.maps.length > this.minHeight) {
-                let t = y
-                while (true) {
-                    let count = this.maps[t].filter((v)=> {
-                        if (v.arrive) return v
-                    }).length
-                    if (count === 0) {
-                        this.maps.pop()
-                        t -= 1
-                    } else {
-                        break
-                    }
-                    if (this.maps.length <= this.minHeight) {
-                        break
-                    }
-                }
-                this.initCanvasSize()
-            }
-        },
+        // resetCanvasSize (x, y) {
+        //     this.resetCanvasHeightSize(y)
+        //     this.resetCanvasWidthSize(x)
+        // },
+        // resetCanvasWidthSize (x) {
+        //     if (x === 0) {
+        //         let count = this.maps.filter((r)=> {
+        //             if (r[0].arrive) return r[0]
+        //         }).length
+        //         if (count > 0) {
+        //             this.maps.forEach((r)=> {
+        //                 r.unshift(this.createCell())
+        //             })
+        //             this.initCanvasSize()
+        //         }
+        //     } else if (x === this.maps[0].length - 1) {
+        //         let count = this.maps.filter((v)=> {
+        //             if (v[x].arrive) return v[x]
+        //         }).length
+        //         if (count > 0) {
+        //             this.maps.forEach((r)=> {
+        //                 r.push(this.createCell())
+        //             })
+        //             this.initCanvasSize()
+        //         }
+        //     } else if (x === 1) {
+        //         while (true) {
+        //             if (this.maps[0].length <= this.minWidth) {
+        //                 break
+        //             }
+        //             let count = this.maps.filter((v)=> {
+        //                 if (v[x].arrive) return v[x]
+        //             }).length
+        //             if (count === 0) {
+        //                 this.maps.forEach((r)=> {
+        //                     r.shift()
+        //                 })
+        //                 this.initCanvasSize()
+        //             } else {
+        //                 break
+        //             }
+        //         }
+        //     } else if (x === this.maps[0].length - 2) {
+        //         let t = x
+        //         while (true) {
+        //             if (this.maps[0].length <= this.minWidth) {
+        //                 break
+        //             }
+        //             let count = this.maps.filter((v)=> {
+        //                 if (v[t].arrive) return v[t]
+        //             }).length
+        //             if (count === 0) {
+        //                 this.maps.forEach((r)=> {
+        //                     r.splice(t + 1, 1)
+        //                 })
+        //                 this.initCanvasSize()
+        //                 t -= 1
+        //             } else {
+        //                 break
+        //             }
+        //         }
+        //     }
+        // },
+        // resetCanvasHeightSize (y) {
+        //     if (y === 0) {
+        //         let count = this.maps[y].filter((v)=> {
+        //             if (v.arrive) return v
+        //         }).length
+        //         if (count > 0) {
+        //             let row = []
+        //             this.maps[y].forEach(()=> {
+        //                 row.push(this.createCell())
+        //             })
+        //             this.maps.unshift(row)
+        //             this.offset = !this.offset
+        //             this.initCanvasSize()
+        //         }
+        //     } else if (y === this.maps.length - 1) {
+        //         let count = this.maps[y].filter((v)=> {
+        //             if (v.arrive) return v
+        //         }).length
+        //         if (count > 0) {
+        //             let row = []
+        //             this.maps[y].forEach(()=> {
+        //                 row.push(this.createCell())
+        //             })
+        //             this.maps.push(row)
+        //             this.initCanvasSize()
+        //         }
+        //     } else if (y === 1 && this.maps.length > this.minHeight) {
+        //         while (true) {
+        //             let count = this.maps[1].filter((v)=> {
+        //                 if (v.arrive) return v
+        //             }).length
+        //             if (count === 0) {
+        //                 this.maps.shift()
+        //                 this.offset = !this.offset
+        //             } else {
+        //                 break
+        //             }
+        //             if (this.maps.length <= this.minHeight) {
+        //                 break
+        //             }
+        //         }
+        //         this.initCanvasSize()
+        //     } else if (y === this.maps.length - 2 && this.maps.length > this.minHeight) {
+        //         let t = y
+        //         while (true) {
+        //             let count = this.maps[t].filter((v)=> {
+        //                 if (v.arrive) return v
+        //             }).length
+        //             if (count === 0) {
+        //                 this.maps.pop()
+        //                 t -= 1
+        //             } else {
+        //                 break
+        //             }
+        //             if (this.maps.length <= this.minHeight) {
+        //                 break
+        //             }
+        //         }
+        //         this.initCanvasSize()
+        //     }
+        // },
         drawLine (ctx, x, y) {
             ctx.moveTo(x - this.halfWidth, y - this.quarterHeight)
             ctx.lineTo(x, y - this.lengthen)
@@ -250,15 +250,16 @@ var app = new Vue({
         initMaps () {
             this.maps = []
             axios.get('/scene/' + this.getQueryString()['id'] + '/cell').then((response) => {
-                let maxX = 0
-                let maxY = 0
-                this.offset = response.data.isOffset
-                response.data.cells.forEach((c)=> {
-                    maxX = (maxX > c.x ? maxX : c.x)
-                    maxY = (maxY > c.y ? maxY : c.y)
-                });
-                maxX = (maxX >= this.minWidth ? maxX + 1 : this.minWidth)
-                maxY = (maxY >= this.minHeight ? maxY + 1 : this.minHeight)
+                document.title = response.data.scene.name
+                let maxX = response.data.scene.width
+                let maxY = response.data.scene.height
+                // this.offset = response.data.isOffset
+                // response.data.cells.forEach((c)=> {
+                //     maxX = (maxX > c.x ? maxX : c.x)
+                //     maxY = (maxY > c.y ? maxY : c.y)
+                // });
+                // maxX = (maxX >= this.minWidth ? maxX + 1 : this.minWidth)
+                // maxY = (maxY >= this.minHeight ? maxY + 1 : this.minHeight)
                 for (let y = 0; y < maxY; y++) {
                     let row = []
                     for (let x = 0; x < maxX; x++) {
@@ -283,7 +284,7 @@ var app = new Vue({
         save () {
             this.loading = true
             axios.post('/scene/' + this.getQueryString()['id'] + '/cell', {
-                isOffset: this.offset,
+                // isOffset: this.offset,
                 cells: this.maps
             }).then((response) => {
                 this.loading = false
@@ -298,7 +299,7 @@ var app = new Vue({
         },
         openNpcSetting (id) {
             axios.get('/npc', {params: {id: id}}).then((response)=> {
-                this.npc = response.data
+                this.npc = response.data.data[0]
                 this.visible.npcSetting = true
             })
         },
@@ -315,9 +316,9 @@ var app = new Vue({
                 this.$message.error({message: '保存失败'});
             })
         },
-        addNpcTalk () {
-            this.npc.talk.push({word: ''})
-        },
+        // addNpcTalk () {
+        //     this.npc.talk.push({word: ''})
+        // },
         deleteNpcTalk (e) {
             // debugger
             // e.target.parentNode.parentNode.parentNode.remove();
@@ -363,7 +364,7 @@ var app = new Vue({
         }
     },
     mounted () {
-        document.title = decodeURI(this.getQueryString()['name'])
+        // document.title = decodeURI(this.getQueryString()['name'])
         this.initMaps()
         let ctx = this.canvas.getContext('2d')
         ctx.strokeStyle = '#27408B'
@@ -378,10 +379,10 @@ var app = new Vue({
                         this.drawHexagon(ctx, x, y, cell)
                     }
                 }
+                window.requestAnimationFrame(fn)
             } catch (e) {
                 console.info(e)
             }
-            window.requestAnimationFrame(fn)
         }
         fn()
     }
