@@ -1,7 +1,6 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -90,10 +89,7 @@ public class SceneCell {
         this.scene = scene;
     }
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "scene_cell_npc",
-            joinColumns = {@JoinColumn(name = "scene_cell_id", referencedColumnName = "scene_cell_id")},
-            inverseJoinColumns = {@JoinColumn(name = "npc_id", referencedColumnName = "character_id")})
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "sceneCell")
     public Set<Npc> getNpcs() {
         return npcs;
     }

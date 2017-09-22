@@ -42,9 +42,8 @@ public class SceneServiceImpl implements SceneService {
 
     @Override
     public void createSceneCell(Long id, JsonNode jsonData) {
-        sceneCellDao.getSession()
-                .createSQLQuery("delete scn.* from scene_cell_npc scn where exists (select 1 from scene_cell sc where sc.scene_cell_id = scn.scene_cell_id and sc.scene_id=:id)")
-                .setLong("id", id).executeUpdate();
+        String sql = "update npc n set n.scene_cell_id = null where exists (select 1 from scene_cell sc where sc.scene_cell_id = n.scene_cell_id and sc.scene_id=:id)";
+        sceneCellDao.getSession().createSQLQuery(sql).setLong("id", id).executeUpdate();
         sceneCellDao.getSession().createSQLQuery("delete from scene_cell where scene_id=:id").setLong("id", id).executeUpdate();
         Scene scene = sceneDao.get().byId(id);
         Set<Long> npcIds = new HashSet<>();
@@ -59,13 +58,16 @@ public class SceneServiceImpl implements SceneService {
                 sceneCell.setDescription(cell.has("description") ? cell.get("description").asText("") : "");
                 sceneCell.setX(cell.get("x").asInt());
                 sceneCell.setY(cell.get("y").asInt());
+                sceneCellDao.insert(sceneCell);
                 for (JsonNode npc : cell.get("npcs")) {
                     npcIds.add(npc.get("id").asLong());
                 }
                 if (!npcIds.isEmpty()) {
-                    npcDao.get().where().in("id", npcIds).list().forEach(n -> sceneCell.getNpcs().add(n));
+                    npcDao.get().where().in("id", npcIds).list().forEach(n -> {
+                        n.setSceneCell(sceneCell);
+                        npcDao.update(n);
+                    });
                 }
-                sceneCellDao.insert(sceneCell);
             }
         }
     }
