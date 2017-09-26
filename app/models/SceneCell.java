@@ -3,8 +3,6 @@ package models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "scene_cell")
@@ -13,11 +11,16 @@ public class SceneCell {
     private String name;
     private String description;
     private String color;
-    private Integer x;
-    private Integer y;
     private Boolean arrive;
+    private Integer layer;
+    private Long east;
+    private Long northEast;
+    private Long northWest;
+    private Long west;
+    private Long southWest;
+    private Long southEast;
     private Scene scene;
-    private Set<Npc> npcs = new HashSet<>();
+//    private Set<Npc> npcs = new HashSet<>();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,20 +57,74 @@ public class SceneCell {
         this.color = color;
     }
 
-    public Integer getX() {
-        return x;
+//    public Integer getX() {
+//        return x;
+//    }
+//
+//    public void setX(Integer x) {
+//        this.x = x;
+//    }
+//
+//    public Integer getY() {
+//        return y;
+//    }
+//
+//    public void setY(Integer y) {
+//        this.y = y;
+//    }
+
+    @Column(name = "east_id")
+    public Long getEast() {
+        return east;
     }
 
-    public void setX(Integer x) {
-        this.x = x;
+    public void setEast(Long east) {
+        this.east = east;
     }
 
-    public Integer getY() {
-        return y;
+    @Column(name = "north_east_id")
+    public Long getNorthEast() {
+        return northEast;
     }
 
-    public void setY(Integer y) {
-        this.y = y;
+    public void setNorthEast(Long northEast) {
+        this.northEast = northEast;
+    }
+
+    @Column(name = "north_west_id")
+    public Long getNorthWest() {
+        return northWest;
+    }
+
+    public void setNorthWest(Long northWest) {
+        this.northWest = northWest;
+    }
+
+    @Column(name = "west_id")
+    public Long getWest() {
+        return west;
+    }
+
+    public void setWest(Long west) {
+        this.west = west;
+    }
+
+    @Column(name = "south_west_id")
+    public Long getSouthWest() {
+        return southWest;
+    }
+
+    public void setSouthWest(Long southWest) {
+        this.southWest = southWest;
+    }
+
+    @Column(name = "south_east_id")
+    public Long getSouthEast() {
+        return southEast;
+    }
+
+    public void setSouthEast(Long southEast) {
+        this.southEast = southEast;
     }
 
     public Boolean getArrive() {
@@ -89,12 +146,20 @@ public class SceneCell {
         this.scene = scene;
     }
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "sceneCell")
-    public Set<Npc> getNpcs() {
-        return npcs;
+    public Integer getLayer() {
+        return layer;
     }
 
-    public void setNpcs(Set<Npc> npcs) {
-        this.npcs = npcs;
+    public void setLayer(Integer layer) {
+        this.layer = layer;
     }
+
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "sceneCell")
+//    public Set<Npc> getNpcs() {
+//        return npcs;
+//    }
+//
+//    public void setNpcs(Set<Npc> npcs) {
+//        this.npcs = npcs;
+//    }
 }
