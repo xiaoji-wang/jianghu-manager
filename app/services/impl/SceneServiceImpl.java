@@ -9,7 +9,9 @@ import models.Scene;
 import models.SceneCell;
 import services.SceneService;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static util.Collection.map;
 
@@ -42,44 +44,191 @@ public class SceneServiceImpl implements SceneService {
         Scene scene = new Scene();
     }
 
-    private void createSceneCell(SceneCell center) {
-        SceneCell east = createEastSceneCell(center);
-        SceneCell southEast = createSouthEastSceneCell(center);
-        SceneCell southWest = createSouthWestSceneCell(center);
-        SceneCell west = createWestSceneCell(center);
-        SceneCell northWest = createNorthWestSceneCell(center);
-        SceneCell northEast = createNorthEastSceneCell(center);
+    private void createSceneCell(SceneCell center, List<SceneCell> cells) {
+        SceneCell east = createEastSceneCell(center, cells);
+        SceneCell southEast = createSouthEastSceneCell(center, cells);
+        SceneCell southWest = createSouthWestSceneCell(center, cells);
+        SceneCell west = createWestSceneCell(center, cells);
+        SceneCell northWest = createNorthWestSceneCell(center, cells);
+        SceneCell northEast = createNorthEastSceneCell(center, cells);
     }
 
-    private SceneCell createEastSceneCell(SceneCell center) {
+    private SceneCell createEastSceneCell(SceneCell center, List<SceneCell> cells) {
+        Optional<SceneCell> op = cells.stream().filter(c -> c.getId().equals(center.getEast())).findAny();
+        if (op.isPresent()) {
+            return op.get();
+        }
         SceneCell cell = new SceneCell();
-//        center.setEast(cell.getId());
+        cell.setWest(center.getId());
+        sceneCellDao.insert(cell);
+        center.setEast(cell.getId());
+        sceneCellDao.update(center);
+        op = cells.stream().filter(c -> c.getId().equals(center.getNorthEast())).findFirst();
+        if (op.isPresent()) {
+            SceneCell northEast = op.get();
+            cell.setNorthWest(northEast.getId());
+            sceneCellDao.update(cell);
+            northEast.setSouthEast(cell.getId());
+            sceneCellDao.update(northEast);
+        }
+        op = cells.stream().filter(c -> c.getId().equals(center.getSouthEast())).findFirst();
+        if (op.isPresent()) {
+            SceneCell southEast = op.get();
+            cell.setSouthWest(southEast.getId());
+            sceneCellDao.update(cell);
+            southEast.setNorthEast(cell.getId());
+            sceneCellDao.update(southEast);
+        }
+        cells.add(cell);
         return cell;
     }
 
-    private SceneCell createSouthEastSceneCell(SceneCell center) {
+    private SceneCell createSouthEastSceneCell(SceneCell center, List<SceneCell> cells) {
+        Optional<SceneCell> op = cells.stream().filter(c -> c.getId().equals(center.getSouthEast())).findAny();
+        if (op.isPresent()) {
+            return op.get();
+        }
         SceneCell cell = new SceneCell();
+        cell.setNorthWest(center.getId());
+        sceneCellDao.insert(cell);
+        center.setSouthEast(cell.getId());
+        sceneCellDao.update(center);
+        op = cells.stream().filter(c -> c.getId().equals(center.getEast())).findFirst();
+        if (op.isPresent()) {
+            SceneCell east = op.get();
+            cell.setNorthEast(east.getId());
+            sceneCellDao.update(cell);
+            east.setSouthWest(cell.getId());
+            sceneCellDao.update(east);
+        }
+        op = cells.stream().filter(c -> c.getId().equals(center.getSouthWest())).findFirst();
+        if (op.isPresent()) {
+            northWest(op.get(), cell);
+        }
+        cells.add(cell);
         return cell;
     }
 
-    private SceneCell createSouthWestSceneCell(SceneCell center) {
+    private SceneCell createSouthWestSceneCell(SceneCell center, List<SceneCell> cells) {
+        Optional<SceneCell> op = cells.stream().filter(c -> c.getId().equals(center.getSouthWest())).findAny();
+        if (op.isPresent()) {
+            return op.get();
+        }
         SceneCell cell = new SceneCell();
+        cell.setNorthEast(center.getId());
+        sceneCellDao.insert(cell);
+        center.setSouthWest(cell.getId());
+        sceneCellDao.update(center);
+        op = cells.stream().filter(c -> c.getId().equals(center.getSouthEast())).findFirst();
+        if (op.isPresent()) {
+            SceneCell southEast = op.get();
+            cell.setEast(southEast.getId());
+            sceneCellDao.update(cell);
+            southEast.setWest(cell.getId());
+            sceneCellDao.update(southEast);
+        }
+        op = cells.stream().filter(c -> c.getId().equals(center.getWest())).findFirst();
+        if (op.isPresent()) {
+            SceneCell west = op.get();
+            cell.setNorthWest(west.getId());
+            sceneCellDao.update(cell);
+            west.setSouthEast(cell.getId());
+            sceneCellDao.update(west);
+        }
+        cells.add(cell);
         return cell;
     }
 
-    private SceneCell createWestSceneCell(SceneCell center) {
+    private SceneCell createWestSceneCell(SceneCell center, List<SceneCell> cells) {
+        Optional<SceneCell> op = cells.stream().filter(c -> c.getId().equals(center.getWest())).findAny();
+        if (op.isPresent()) {
+            return op.get();
+        }
         SceneCell cell = new SceneCell();
+        cell.setEast(center.getId());
+        sceneCellDao.insert(cell);
+        center.setWest(cell.getId());
+        sceneCellDao.update(center);
+        op = cells.stream().filter(c -> c.getId().equals(center.getSouthWest())).findFirst();
+        if (op.isPresent()) {
+            east(op.get(), cell);
+        }
+        op = cells.stream().filter(c -> c.getId().equals(center.getNorthWest())).findFirst();
+        if (op.isPresent()) {
+            SceneCell northWest = op.get();
+            cell.setNorthEast(northWest.getId());
+            sceneCellDao.update(cell);
+            northWest.setSouthWest(cell.getId());
+            sceneCellDao.update(northWest);
+        }
+        cells.add(cell);
         return cell;
     }
 
-    private SceneCell createNorthWestSceneCell(SceneCell center) {
+    private SceneCell createNorthWestSceneCell(SceneCell center, List<SceneCell> cells) {
+        Optional<SceneCell> op = cells.stream().filter(c -> c.getId().equals(center.getNorthWest())).findAny();
+        if (op.isPresent()) {
+            return op.get();
+        }
         SceneCell cell = new SceneCell();
+        cell.setSouthEast(center.getId());
+        sceneCellDao.insert(cell);
+        center.setNorthWest(cell.getId());
+        sceneCellDao.update(center);
+        op = cells.stream().filter(c -> c.getId().equals(center.getWest())).findFirst();
+        if (op.isPresent()) {
+            SceneCell west = op.get();
+            cell.setSouthWest(west.getId());
+            sceneCellDao.update(cell);
+            west.setNorthEast(cell.getId());
+            sceneCellDao.update(west);
+        }
+        op = cells.stream().filter(c -> c.getId().equals(center.getNorthEast())).findFirst();
+        if (op.isPresent()) {
+            SceneCell northEast = op.get();
+            cell.setEast(northEast.getId());
+            sceneCellDao.update(cell);
+            northEast.setWest(cell.getId());
+            sceneCellDao.update(northEast);
+        }
+        cells.add(cell);
         return cell;
     }
 
-    private SceneCell createNorthEastSceneCell(SceneCell center) {
+    private SceneCell createNorthEastSceneCell(SceneCell center, List<SceneCell> cells) {
+        Optional<SceneCell> op = cells.stream().filter(c -> c.getId().equals(center.getNorthEast())).findAny();
+        if (op.isPresent()) {
+            return op.get();
+        }
         SceneCell cell = new SceneCell();
+        cell.setSouthWest(center.getId());
+        sceneCellDao.insert(cell);
+        center.setNorthEast(cell.getId());
+        sceneCellDao.update(center);
+        op = cells.stream().filter(c -> c.getId().equals(center.getEast())).findFirst();
+        if (op.isPresent()) {
+            east(op.get(), cell);
+        }
+        op = cells.stream().filter(c -> c.getId().equals(center.getNorthWest())).findFirst();
+        if (op.isPresent()) {
+            northWest(op.get(), cell);
+        }
+        cells.add(cell);
         return cell;
+    }
+
+    private void east(SceneCell east, SceneCell cell) {
+        cell.setSouthEast(east.getId());
+        sceneCellDao.update(cell);
+        east.setNorthWest(cell.getId());
+        sceneCellDao.update(east);
+    }
+
+    private void northWest(SceneCell northWest, SceneCell cell) {
+        cell.setWest(northWest.getId());
+        sceneCellDao.update(cell);
+        northWest.setEast(cell.getId());
+        sceneCellDao.update(northWest);
     }
 
     @Override
