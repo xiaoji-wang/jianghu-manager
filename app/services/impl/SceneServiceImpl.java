@@ -52,27 +52,34 @@ public class SceneServiceImpl implements SceneService {
     }
 
     private SceneCell createEastSceneCell(SceneCell center) {
-
+        SceneCell cell = new SceneCell();
+//        center.setEast(cell.getId());
+        return cell;
     }
 
     private SceneCell createSouthEastSceneCell(SceneCell center) {
-
+        SceneCell cell = new SceneCell();
+        return cell;
     }
 
     private SceneCell createSouthWestSceneCell(SceneCell center) {
-
+        SceneCell cell = new SceneCell();
+        return cell;
     }
 
     private SceneCell createWestSceneCell(SceneCell center) {
-
+        SceneCell cell = new SceneCell();
+        return cell;
     }
 
     private SceneCell createNorthWestSceneCell(SceneCell center) {
-
+        SceneCell cell = new SceneCell();
+        return cell;
     }
 
     private SceneCell createNorthEastSceneCell(SceneCell center) {
-
+        SceneCell cell = new SceneCell();
+        return cell;
     }
 
     @Override
