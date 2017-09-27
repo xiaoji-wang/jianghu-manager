@@ -3,8 +3,8 @@
 # ~~~~
 
 GET         /scene                 controllers.SceneController.getScene
+POST        /scene                 controllers.SceneController.createScene
 GET         /scene/:id/cell        controllers.SceneController.getSceneCell(id:Long)
-POST        /scene/:id/cell        controllers.SceneController.createSceneCell(id:Long)
 
 GET         /npc                   controllers.NpcController.getNpc
 POST        /npc                   controllers.NpcController.createNpc

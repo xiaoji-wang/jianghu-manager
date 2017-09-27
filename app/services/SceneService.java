@@ -15,5 +15,5 @@ public interface SceneService {
 
     Map getSceneCell(Long id, Map<String, String> params);
 
-    void createSceneCell(Long id, JsonNode jsonData);
+    void createScene(JsonNode jsonData);
 }

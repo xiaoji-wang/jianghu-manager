@@ -8,18 +8,33 @@ import javax.persistence.*;
 @Table(name = "scene_cell")
 public class SceneCell {
     private Long id;
+    private Scene scene;
     private String name;
     private String description;
     private String color;
-    private Boolean arrive;
-    private Integer layer;
+    private Boolean center = false;
+    //    private Integer layer;
     private Long east;
     private Long northEast;
     private Long northWest;
     private Long west;
     private Long southWest;
     private Long southEast;
-    private Scene scene;
+
+    private Boolean eastIn = false;
+    private Boolean northEastIn = false;
+    private Boolean northWestIn = false;
+    private Boolean westIn = false;
+    private Boolean southWestIn = false;
+    private Boolean southEastIn = false;
+
+    private Boolean eastOut = false;
+    private Boolean northEastOut = false;
+    private Boolean northWestOut = false;
+    private Boolean westOut = false;
+    private Boolean southWestOut = false;
+    private Boolean southEastOut = false;
+
 //    private Set<Npc> npcs = new HashSet<>();
 
     @Id
@@ -127,13 +142,13 @@ public class SceneCell {
         this.southEast = southEast;
     }
 
-    public Boolean getArrive() {
-        return arrive;
-    }
-
-    public void setArrive(Boolean arrive) {
-        this.arrive = arrive;
-    }
+//    public Boolean getArrive() {
+//        return arrive;
+//    }
+//
+//    public void setArrive(Boolean arrive) {
+//        this.arrive = arrive;
+//    }
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
@@ -146,13 +161,13 @@ public class SceneCell {
         this.scene = scene;
     }
 
-    public Integer getLayer() {
-        return layer;
-    }
-
-    public void setLayer(Integer layer) {
-        this.layer = layer;
-    }
+//    public Integer getLayer() {
+//        return layer;
+//    }
+//
+//    public void setLayer(Integer layer) {
+//        this.layer = layer;
+//    }
 
 //    @OneToMany(fetch = FetchType.LAZY, mappedBy = "sceneCell")
 //    public Set<Npc> getNpcs() {
@@ -162,4 +177,120 @@ public class SceneCell {
 //    public void setNpcs(Set<Npc> npcs) {
 //        this.npcs = npcs;
 //    }
+
+    @Column(name = "east_in")
+    public Boolean getEastIn() {
+        return eastIn;
+    }
+
+    public void setEastIn(Boolean eastIn) {
+        this.eastIn = eastIn;
+    }
+
+    @Column(name = "north_east_in")
+    public Boolean getNorthEastIn() {
+        return northEastIn;
+    }
+
+    public void setNorthEastIn(Boolean northEastIn) {
+        this.northEastIn = northEastIn;
+    }
+
+    @Column(name = "north_west_in")
+    public Boolean getNorthWestIn() {
+        return northWestIn;
+    }
+
+    public void setNorthWestIn(Boolean northWestIn) {
+        this.northWestIn = northWestIn;
+    }
+
+    @Column(name = "west_in")
+    public Boolean getWestIn() {
+        return westIn;
+    }
+
+    public void setWestIn(Boolean westIn) {
+        this.westIn = westIn;
+    }
+
+    @Column(name = "south_west_in")
+    public Boolean getSouthWestIn() {
+        return southWestIn;
+    }
+
+    public void setSouthWestIn(Boolean southWestIn) {
+        this.southWestIn = southWestIn;
+    }
+
+    @Column(name = "south_east_in")
+    public Boolean getSouthEastIn() {
+        return southEastIn;
+    }
+
+    public void setSouthEastIn(Boolean southEastIn) {
+        this.southEastIn = southEastIn;
+    }
+
+    @Column(name = "east_out")
+    public Boolean getEastOut() {
+        return eastOut;
+    }
+
+    public void setEastOut(Boolean eastOut) {
+        this.eastOut = eastOut;
+    }
+
+    @Column(name = "north_east_out")
+    public Boolean getNorthEastOut() {
+        return northEastOut;
+    }
+
+    public void setNorthEastOut(Boolean northEastOut) {
+        this.northEastOut = northEastOut;
+    }
+
+    @Column(name = "north_west_out")
+    public Boolean getNorthWestOut() {
+        return northWestOut;
+    }
+
+    public void setNorthWestOut(Boolean northWestOut) {
+        this.northWestOut = northWestOut;
+    }
+
+    @Column(name = "west_out")
+    public Boolean getWestOut() {
+        return westOut;
+    }
+
+    public void setWestOut(Boolean westOut) {
+        this.westOut = westOut;
+    }
+
+    @Column(name = "south_west_out")
+    public Boolean getSouthWestOut() {
+        return southWestOut;
+    }
+
+    public void setSouthWestOut(Boolean southWestOut) {
+        this.southWestOut = southWestOut;
+    }
+
+    @Column(name = "south_east_out")
+    public Boolean getSouthEastOut() {
+        return southEastOut;
+    }
+
+    public void setSouthEastOut(Boolean southEastOut) {
+        this.southEastOut = southEastOut;
+    }
+
+    public Boolean getCenter() {
+        return center;
+    }
+
+    public void setCenter(Boolean center) {
+        this.center = center;
+    }
 }
