@@ -67,13 +67,19 @@ public class SceneServiceImpl implements SceneService {
             SceneCell northEast = createNorthEastSceneCell(scene, center, cells);
             layer--;
             if (layer > 0) {
-                createSceneCell(scene, layer, east, cells);
-                createSceneCell(scene, layer, southEast, cells);
-                createSceneCell(scene, layer, southWest, cells);
-                createSceneCell(scene, layer, west, cells);
-                createSceneCell(scene, layer, northWest, cells);
-                createSceneCell(scene, layer, northEast, cells);
+                cycleCreate(scene, layer, east, cells);
+                cycleCreate(scene, layer, southEast, cells);
+                cycleCreate(scene, layer, southWest, cells);
+                cycleCreate(scene, layer, west, cells);
+                cycleCreate(scene, layer, northWest, cells);
+                cycleCreate(scene, layer, northEast, cells);
             }
+        }
+    }
+
+    private void cycleCreate(Scene scene, int layer, SceneCell cell, Map<Long, SceneCell> cells) {
+        if (cell.getEast() == null || cell.getSouthEast() == null || cell.getSouthWest() == null || cell.getWest() == null || cell.getNorthWest() == null || cell.getNorthEast() == null) {
+            createSceneCell(scene, layer, cell, cells);
         }
     }
 
