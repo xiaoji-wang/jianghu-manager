@@ -66,12 +66,14 @@ public class SceneServiceImpl implements SceneService {
             SceneCell northWest = createNorthWestSceneCell(scene, center, cells);
             SceneCell northEast = createNorthEastSceneCell(scene, center, cells);
             layer--;
-            createSceneCell(scene, layer, east, cells);
-            createSceneCell(scene, layer, southEast, cells);
-            createSceneCell(scene, layer, southWest, cells);
-            createSceneCell(scene, layer, west, cells);
-            createSceneCell(scene, layer, northWest, cells);
-            createSceneCell(scene, layer, northEast, cells);
+            if (layer > 0) {
+                createSceneCell(scene, layer, east, cells);
+                createSceneCell(scene, layer, southEast, cells);
+                createSceneCell(scene, layer, southWest, cells);
+                createSceneCell(scene, layer, west, cells);
+                createSceneCell(scene, layer, northWest, cells);
+                createSceneCell(scene, layer, northEast, cells);
+            }
         }
     }
 
