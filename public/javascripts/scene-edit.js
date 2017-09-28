@@ -119,6 +119,7 @@ var app = new Vue({
             this.maps = []
             axios.get('/scene/' + this.getQueryString()['id'] + '/cell').then((response) => {
                 document.title = response.data.scene.name
+                this.maps = response.data.cells
                 // let maxX = response.data.scene.width
                 // let maxY = response.data.scene.height
                 // for (let y = 0; y < maxY; y++) {

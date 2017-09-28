@@ -8,6 +8,7 @@ import models.Scene;
 import models.SceneCell;
 import services.SceneService;
 
+import java.util.List;
 import java.util.Map;
 
 import static util.Collection.map;
@@ -29,10 +30,9 @@ public class SceneServiceImpl implements SceneService {
     @Override
     public Map getSceneCell(Long id, Map<String, String> params) {
         Scene scene = sceneDao.get().byId(id);
-        return map(
-                "scene", scene,
-                "cells", sceneCellDao.get().leftJoin("npcs").where().eq("scene", scene).list(params)
-        );
+        SceneCell[][] cells = new SceneCell[scene.getHeight()][scene.getWidth()];
+        sceneCellDao.get().where().eq("scene", scene).list(params).forEach(c -> cells[c.getY()][c.getX()] = c);
+        return map("scene", scene, "cells", cells);
     }
 
     @Override
