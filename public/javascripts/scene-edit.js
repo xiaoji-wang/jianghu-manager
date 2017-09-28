@@ -77,7 +77,7 @@ var app = new Vue({
                     this.isdblclick = false
                 }
             }
-            ctx.fillStyle = map.color
+            // ctx.fillStyle = map.color
             ctx.fill()
             ctx.closePath()
             if (x === this.axisPoint.current.x && y === this.axisPoint.current.y) {
@@ -119,32 +119,32 @@ var app = new Vue({
             this.maps = []
             axios.get('/scene/' + this.getQueryString()['id'] + '/cell').then((response) => {
                 document.title = response.data.scene.name
-                let maxX = response.data.scene.width
-                let maxY = response.data.scene.height
-                for (let y = 0; y < maxY; y++) {
-                    let row = []
-                    for (let x = 0; x < maxX; x++) {
-                        let cell = response.data.cells.find((c)=> {
-                            if (c.x === x && c.y === y) {
-                                return c
-                            }
-                        })
-                        if (!cell) {
-                            cell = this.createCell()
-                        }
-                        if (!cell.npcs) {
-                            cell.npcs = []
-                        }
-                        row.push(cell)
-                    }
-                    this.maps.push(row)
-                }
+                // let maxX = response.data.scene.width
+                // let maxY = response.data.scene.height
+                // for (let y = 0; y < maxY; y++) {
+                //     let row = []
+                //     for (let x = 0; x < maxX; x++) {
+                //         let cell = response.data.cells.find((c)=> {
+                //             if (c.x === x && c.y === y) {
+                //                 return c
+                //             }
+                //         })
+                //         // if (!cell) {
+                //         //     cell = this.createCell()
+                //         // }
+                //         // if (!cell.npcs) {
+                //         //     cell.npcs = []
+                //         // }
+                //         row.push(cell)
+                //     }
+                //     this.maps.push(row)
+                // }
                 this.initCanvasSize()
             })
         },
-        createCell () {
-            return {name: '', description: '', arrive: false, color: '#ddd', npcs: []}
-        },
+        // createCell () {
+        //     return {name: '', description: '', arrive: false, color: '#ddd', npcs: []}
+        // },
         save () {
             this.loading = true
             axios.post('/scene/' + this.getQueryString()['id'] + '/cell', {

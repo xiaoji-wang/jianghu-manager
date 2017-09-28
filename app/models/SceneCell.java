@@ -14,6 +14,8 @@ public class SceneCell {
     private String color;
     private Boolean center = false;
     //    private Integer layer;
+    private Integer x;
+    private Integer y;
     private Long east;
     private Long northEast;
     private Long northWest;
@@ -34,6 +36,8 @@ public class SceneCell {
     private Boolean westOut = false;
     private Boolean southWestOut = false;
     private Boolean southEastOut = false;
+
+    private Boolean traversal = false;
 
 //    private Set<Npc> npcs = new HashSet<>();
 
@@ -292,5 +296,30 @@ public class SceneCell {
 
     public void setCenter(Boolean center) {
         this.center = center;
+    }
+
+    @Transient
+    public Boolean getTraversal() {
+        return traversal;
+    }
+
+    public void setTraversal(Boolean traversal) {
+        this.traversal = traversal;
+    }
+
+    public Integer getX() {
+        return x;
+    }
+
+    public void setX(Integer x) {
+        this.x = x;
+    }
+
+    public Integer getY() {
+        return y;
+    }
+
+    public void setY(Integer y) {
+        this.y = y;
     }
 }

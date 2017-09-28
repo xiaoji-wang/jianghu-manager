@@ -8,7 +8,6 @@ import models.Scene;
 import models.SceneCell;
 import services.SceneService;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static util.Collection.map;
@@ -41,315 +40,50 @@ public class SceneServiceImpl implements SceneService {
         Scene scene = new Scene();
         scene.setName(jsonData.get("name").asText());
         scene.setDescription(jsonData.get("description").asText());
-        scene.setLayer(jsonData.get("layer").asInt());
+        scene.setWidth(jsonData.get("width").asInt());
+        scene.setHeight(jsonData.get("height").asInt());
         sceneDao.insert(scene);
 
         createSceneCell(scene);
     }
 
     private void createSceneCell(Scene scene) {
-        SceneCell center = new SceneCell();
-        center.setScene(scene);
-        center.setCenter(true);
-        sceneCellDao.insert(center);
-        Map<Long, SceneCell> cells = new HashMap<>();
-        cells.put(center.getId(), center);
-        createSceneCell(scene, scene.getLayer(), center, cells);
-    }
-
-    private void createSceneCell(Scene scene, int layer, SceneCell center, Map<Long, SceneCell> cells) {
-        if (layer > 0) {
-            SceneCell east = createEastSceneCell(scene, center, cells);
-            SceneCell southEast = createSouthEastSceneCell(scene, center, cells);
-            SceneCell southWest = createSouthWestSceneCell(scene, center, cells);
-            SceneCell west = createWestSceneCell(scene, center, cells);
-            SceneCell northWest = createNorthWestSceneCell(scene, center, cells);
-            SceneCell northEast = createNorthEastSceneCell(scene, center, cells);
-            layer--;
-            if (layer > 0) {
-                cycleCreate(scene, layer, east, cells);
-                cycleCreate(scene, layer, southEast, cells);
-                cycleCreate(scene, layer, southWest, cells);
-                cycleCreate(scene, layer, west, cells);
-                cycleCreate(scene, layer, northWest, cells);
-                cycleCreate(scene, layer, northEast, cells);
+        SceneCell[][] map = new SceneCell[scene.getHeight()][scene.getWidth()];
+        for (int y = 0; y < map.length; y++) {
+            for (int x = 0; x < map[y].length; x++) {
+                SceneCell cell = new SceneCell();
+                cell.setX(x);
+                cell.setY(y);
+                cell.setScene(scene);
+                sceneCellDao.insert(cell);
+                map[y][x] = cell;
+                if (x > 0) {
+                    cell.setWest(map[y][x - 1].getId());
+                    map[y][x - 1].setEast(cell.getId());
+                }
+                if (y > 0) {
+                    if (y % 2 == 0) {
+                        cell.setNorthEast(map[y - 1][x].getId());
+                        map[y - 1][x].setSouthWest(cell.getId());
+                        if (x > 0) {
+                            cell.setNorthWest(map[y - 1][x - 1].getId());
+                            map[y - 1][x - 1].setSouthEast(cell.getId());
+                        }
+                    } else {
+                        cell.setNorthWest(map[y - 1][x].getId());
+                        map[y - 1][x].setSouthEast(cell.getId());
+                        if (x < map[y].length - 1) {
+                            cell.setNorthEast(map[y - 1][x + 1].getId());
+                            map[y - 1][x + 1].setSouthWest(cell.getId());
+                        }
+                    }
+                }
             }
         }
-    }
-
-    private void cycleCreate(Scene scene, int layer, SceneCell cell, Map<Long, SceneCell> cells) {
-        if (cell.getEast() == null || cell.getSouthEast() == null || cell.getSouthWest() == null || cell.getWest() == null || cell.getNorthWest() == null || cell.getNorthEast() == null) {
-            createSceneCell(scene, layer, cell, cells);
-        }
-    }
-
-    private SceneCell createEastSceneCell(Scene scene, SceneCell center, Map<Long, SceneCell> cells) {
-        if (cells.containsKey(center.getEast())) {
-            return cells.get(center.getEast());
-        }
-        SceneCell cell = new SceneCell();
-        cell.setScene(scene);
-        cell.setWest(center.getId());
-        sceneCellDao.insert(cell);
-
-        center.setEast(cell.getId());
-        sceneCellDao.update(center);
-
-        if (cells.containsKey(center.getNorthEast())) {
-            SceneCell c = cells.get(center.getNorthEast());
-
-            cell.setNorthWest(c.getId());
-            if (c.getEast() != null) {
-                cell.setNorthEast(c.getEast());
-                cells.get(c.getEast()).setSouthWest(cell.getId());
-                sceneCellDao.update(cells.get(c.getEast()));
+        for (int y = 0; y < map.length; y++) {
+            for (int x = 0; x < map[y].length; x++) {
+                sceneCellDao.update(map[y][x]);
             }
-            sceneCellDao.update(cell);
-
-            c.setSouthEast(cell.getId());
-            sceneCellDao.update(c);
         }
-
-        if (cells.containsKey(center.getSouthEast())) {
-            SceneCell c = cells.get(center.getSouthEast());
-
-            cell.setSouthWest(c.getId());
-            if (c.getEast() != null) {
-                cell.setSouthEast(c.getEast());
-                cells.get(c.getEast()).setNorthWest(cell.getId());
-                sceneCellDao.update(cells.get(c.getEast()));
-            }
-            sceneCellDao.update(cell);
-
-            c.setNorthEast(cell.getId());
-            sceneCellDao.update(c);
-        }
-        cells.put(cell.getId(), cell);
-        return cell;
-    }
-
-    private SceneCell createSouthEastSceneCell(Scene scene, SceneCell center, Map<Long, SceneCell> cells) {
-        if (cells.containsKey(center.getSouthEast())) {
-            return cells.get(center.getSouthEast());
-        }
-        SceneCell cell = new SceneCell();
-        cell.setScene(scene);
-        cell.setNorthWest(center.getId());
-        sceneCellDao.insert(cell);
-
-        center.setSouthEast(cell.getId());
-        sceneCellDao.update(center);
-
-        if (cells.containsKey(center.getEast())) {
-            SceneCell c = cells.get(center.getEast());
-
-            cell.setNorthEast(c.getId());
-            if (c.getSouthEast() != null) {
-                cell.setEast(c.getSouthEast());
-                cells.get(c.getSouthEast()).setWest(cell.getId());
-                sceneCellDao.update(cells.get(c.getSouthEast()));
-            }
-            sceneCellDao.update(cell);
-
-            c.setSouthWest(cell.getId());
-            sceneCellDao.update(c);
-        }
-
-        if (cells.containsKey(center.getSouthWest())) {
-            SceneCell c = cells.get(center.getSouthWest());
-
-            cell.setWest(c.getId());
-            if (c.getSouthEast() != null) {
-                cell.setSouthWest(c.getSouthEast());
-                cells.get(c.getSouthEast()).setNorthEast(cell.getId());
-                sceneCellDao.update(cells.get(c.getSouthEast()));
-            }
-            sceneCellDao.update(cell);
-
-            c.setEast(cell.getId());
-            sceneCellDao.update(c);
-        }
-        cells.put(cell.getId(), cell);
-        return cell;
-    }
-
-    private SceneCell createSouthWestSceneCell(Scene scene, SceneCell center, Map<Long, SceneCell> cells) {
-        if (cells.containsKey(center.getSouthWest())) {
-            return cells.get(center.getSouthWest());
-        }
-        SceneCell cell = new SceneCell();
-        cell.setScene(scene);
-        cell.setNorthEast(center.getId());
-        sceneCellDao.insert(cell);
-
-        center.setSouthWest(cell.getId());
-        sceneCellDao.update(center);
-
-        if (cells.containsKey(center.getSouthEast())) {
-            SceneCell c = cells.get(center.getSouthEast());
-
-            cell.setEast(c.getId());
-            if (c.getSouthWest() != null) {
-                cell.setSouthEast(c.getSouthWest());
-                cells.get(c.getSouthWest()).setNorthWest(cell.getId());
-                sceneCellDao.update(cells.get(c.getSouthWest()));
-            }
-            sceneCellDao.update(cell);
-
-            c.setWest(cell.getId());
-            sceneCellDao.update(c);
-        }
-
-        if (cells.containsKey(center.getWest())) {
-            SceneCell c = cells.get(center.getWest());
-
-            cell.setNorthWest(c.getId());
-            if (c.getSouthWest() != null) {
-                cell.setWest(c.getSouthWest());
-                cells.get(c.getSouthWest()).setEast(cell.getId());
-                sceneCellDao.update(cells.get(c.getSouthWest()));
-            }
-            sceneCellDao.update(cell);
-
-            c.setSouthEast(cell.getId());
-            sceneCellDao.update(c);
-        }
-        cells.put(cell.getId(), cell);
-        return cell;
-    }
-
-    private SceneCell createWestSceneCell(Scene scene, SceneCell center, Map<Long, SceneCell> cells) {
-        if (cells.containsKey(center.getWest())) {
-            return cells.get(center.getWest());
-        }
-        SceneCell cell = new SceneCell();
-        cell.setScene(scene);
-        cell.setEast(center.getId());
-        sceneCellDao.insert(cell);
-
-        center.setWest(cell.getId());
-        sceneCellDao.update(center);
-
-        if (cells.containsKey(center.getSouthWest())) {
-            SceneCell c = cells.get(center.getSouthWest());
-
-            cell.setSouthEast(c.getId());
-            if (c.getWest() != null) {
-                cell.setSouthWest(c.getWest());
-                cells.get(c.getWest()).setNorthEast(cell.getId());
-                sceneCellDao.update(cells.get(c.getWest()));
-            }
-            sceneCellDao.update(cell);
-
-            c.setNorthWest(cell.getId());
-            sceneCellDao.update(c);
-        }
-
-        if (cells.containsKey(center.getNorthWest())) {
-            SceneCell c = cells.get(center.getNorthWest());
-
-            cell.setNorthEast(c.getId());
-            if (c.getWest() != null) {
-                cell.setNorthWest(c.getWest());
-                cells.get(c.getWest()).setSouthEast(cell.getId());
-                sceneCellDao.update(cells.get(c.getWest()));
-            }
-            sceneCellDao.update(cell);
-
-            c.setSouthWest(cell.getId());
-            sceneCellDao.update(c);
-        }
-        cells.put(cell.getId(), cell);
-        return cell;
-    }
-
-    private SceneCell createNorthWestSceneCell(Scene scene, SceneCell center, Map<Long, SceneCell> cells) {
-        if (cells.containsKey(center.getNorthWest())) {
-            return cells.get(center.getNorthWest());
-        }
-        SceneCell cell = new SceneCell();
-        cell.setScene(scene);
-        cell.setSouthEast(center.getId());
-        sceneCellDao.insert(cell);
-
-        center.setNorthWest(cell.getId());
-        sceneCellDao.update(center);
-
-        if (cells.containsKey(center.getWest())) {
-            SceneCell c = cells.get(center.getWest());
-
-            cell.setSouthWest(c.getId());
-            if (c.getNorthWest() != null) {
-                cell.setWest(c.getNorthWest());
-                cells.get(c.getNorthWest()).setEast(cell.getId());
-                sceneCellDao.update(cells.get(c.getNorthWest()));
-            }
-            sceneCellDao.update(cell);
-
-            c.setNorthEast(cell.getId());
-            sceneCellDao.update(c);
-        }
-
-        if (cells.containsKey(center.getNorthEast())) {
-            SceneCell c = cells.get(center.getNorthEast());
-
-            cell.setEast(c.getId());
-            if (c.getNorthWest() != null) {
-                cell.setNorthEast(c.getNorthWest());
-                cells.get(c.getNorthWest()).setSouthWest(cell.getId());
-                sceneCellDao.update(cells.get(c.getNorthWest()));
-            }
-            sceneCellDao.update(cell);
-
-            c.setWest(cell.getId());
-            sceneCellDao.update(c);
-        }
-        cells.put(cell.getId(), cell);
-        return cell;
-    }
-
-    private SceneCell createNorthEastSceneCell(Scene scene, SceneCell center, Map<Long, SceneCell> cells) {
-        if (cells.containsKey(center.getNorthEast())) {
-            return cells.get(center.getNorthEast());
-        }
-        SceneCell cell = new SceneCell();
-        cell.setScene(scene);
-        cell.setSouthWest(center.getId());
-        sceneCellDao.insert(cell);
-
-        center.setNorthEast(cell.getId());
-        sceneCellDao.update(center);
-
-        if (cells.containsKey(center.getEast())) {
-            SceneCell c = cells.get(center.getEast());
-
-            cell.setSouthEast(c.getId());
-            if (c.getNorthEast() != null) {
-                cell.setEast(c.getNorthEast());
-                cells.get(c.getNorthEast()).setWest(cell.getId());
-                sceneCellDao.update(cells.get(c.getNorthEast()));
-            }
-            sceneCellDao.update(cell);
-
-            c.setNorthWest(cell.getId());
-            sceneCellDao.update(c);
-        }
-
-        if (cells.containsKey(center.getNorthWest())) {
-            SceneCell c = cells.get(center.getNorthWest());
-
-            cell.setWest(c.getId());
-            if (c.getNorthEast() != null) {
-                cell.setNorthWest(c.getNorthEast());
-                cells.get(c.getNorthEast()).setSouthEast(cell.getId());
-                sceneCellDao.update(cells.get(c.getNorthEast()));
-            }
-            sceneCellDao.update(cell);
-
-            c.setEast(cell.getId());
-            sceneCellDao.update(c);
-        }
-        cells.put(cell.getId(), cell);
-        return cell;
     }
 }

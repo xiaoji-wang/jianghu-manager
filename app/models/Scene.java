@@ -10,9 +10,9 @@ public class Scene {
     private Long id;
     private String name;
     private String description;
-    //    private Integer width;
-//    private Integer height;
-    private Integer layer;
+    private Integer width;
+    private Integer height;
+    //    private Integer layer;
     private Set<SceneCell> sceneCells = new HashSet<>();
 
     @Id
@@ -51,27 +51,27 @@ public class Scene {
         this.sceneCells = sceneCells;
     }
 
-    public Integer getLayer() {
-        return layer;
+//    public Integer getLayer() {
+//        return layer;
+//    }
+//
+//    public void setLayer(Integer layer) {
+//        this.layer = layer;
+//    }
+
+    public Integer getWidth() {
+        return width;
     }
 
-    public void setLayer(Integer layer) {
-        this.layer = layer;
+    public void setWidth(Integer width) {
+        this.width = width;
     }
 
-//    public Integer getWidth() {
-//        return width;
-//    }
-//
-//    public void setWidth(Integer width) {
-//        this.width = width;
-//    }
-//
-//    public Integer getHeight() {
-//        return height;
-//    }
-//
-//    public void setHeight(Integer height) {
-//        this.height = height;
-//    }
+    public Integer getHeight() {
+        return height;
+    }
+
+    public void setHeight(Integer height) {
+        this.height = height;
+    }
 }
