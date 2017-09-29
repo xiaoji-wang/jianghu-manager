@@ -15,6 +15,41 @@
         li {
             list-style-type: none;
         }
+
+        .hexagon {
+            height: 99px;
+            width: 180px;
+            margin: 80px auto;
+            position: relative;
+            background: #ddd;
+        }
+
+        .hexagon::after {
+            content: "";
+            width: 0;
+            height: 0;
+            position: absolute;
+            top: -53px;
+            border-bottom: 53px solid #ddd;
+            border-left: 90px solid transparent;
+            border-right: 90px solid transparent;
+        }
+
+        .hexagon::before {
+            content: "";
+            width: 0;
+            height: 0;
+            position: absolute;
+            bottom: -53px;
+            border-top: 53px solid #ddd;
+            border-left: 90px solid transparent;
+            border-right: 90px solid transparent;
+        }
+
+        .hexagon label {
+            z-index: 1;
+            position: absolute;
+        }
     </style>
     <link rel="stylesheet" href="stylesheets/element-ui.css"/>
 </head>
@@ -25,7 +60,7 @@
         <el-menu-item index="1"><a href="/list.html">返回</a></el-menu-item>
     </el-menu>
     <div style="position: absolute;top: 60px;bottom: 0;left: 0;right: 320px;overflow: auto;user-select:none;border-right: solid 2px #324157;">
-        <canvas id="canvas" width="100" height="100" @click="click($event)" @dblclick="dblclick($event)"></canvas>
+        <canvas id="canvas" width="100" height="100" @click="click($event)"></canvas>
     </div>
     <div style="position: absolute;top: 60px;bottom: 50px;right: 0;width: 300px;padding: 10px;overflow-y: auto;">
         <el-collapse v-model="activeIndex" accordion>
@@ -37,6 +72,33 @@
                     <el-form-item label="描述">
                         <el-input type="textarea" :rows="5" v-model="current.description"></el-input>
                     </el-form-item>
+                    <div class="hexagon">
+                        <el-switch style="top:39px;right:5px;" v-model="current.eastIn" on-text="" off-text=""
+                                   @change="switchChange"></el-switch>
+                        <el-switch style="top:39px;right:-50px;" v-model="current.eastOut" on-text="" off-text=""
+                                   @change="switchChange"></el-switch>
+                        <el-switch style="top:93px;right:35px;" v-model="current.southEastIn" on-text="" off-text=""
+                                   @change="switchChange"></el-switch>
+                        <el-switch style="top:135px;right:5px;" v-model="current.southEastOut" on-text="" off-text=""
+                                   @change="switchChange"></el-switch>
+                        <el-switch style="top:93px;left:35px;" v-model="current.southWestIn" on-text="" off-text=""
+                                   @change="switchChange"></el-switch>
+                        <el-switch style="top:135px;left:5px;" v-model="current.southWestOut" on-text="" off-text=""
+                                   @change="switchChange"></el-switch>
+                        <el-switch style="top:39px;left:5px;" v-model="current.westIn" on-text="" off-text=""
+                                   @change="switchChange"></el-switch>
+                        <el-switch style="top:39px;left:-50px;" v-model="current.westOut" on-text="" off-text=""
+                                   @change="switchChange"></el-switch>
+                        <el-switch style="top:-18px;left:35px;" v-model="current.northWestIn" on-text="" off-text=""
+                                   @change="switchChange"></el-switch>
+                        <el-switch style="top:-55px;left:5px;" v-model="current.northWestOut" on-text="" off-text=""
+                                   @change="switchChange"></el-switch>
+                        <el-switch style="top:-18px;right:35px;" v-model="current.northEastIn" on-text="" off-text=""
+                                   @change="switchChange"></el-switch>
+                        <el-switch style="top:-55px;right:5px;" v-model="current.northEastOut" on-text="" off-text=""
+                                   @change="switchChange"></el-switch>
+                        <div style="position: absolute;left: 64px;top: 38px;font-size: 14px;color: #48576a;">出入设置</div>
+                    </div>
                 </el-form>
             </el-collapse-item>
             <el-collapse-item title="NPC" name="2">

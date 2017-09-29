@@ -32,6 +32,12 @@ public class SceneController extends BaseController {
     }
 
     @Transactional
+    public Result saveSceneCell(Long id) {
+        sceneService.saveSceneCell(id, getJsonData());
+        return success();
+    }
+
+    @Transactional
     public Result getScene() {
         return json(sceneService.getScene(getParams()));
     }

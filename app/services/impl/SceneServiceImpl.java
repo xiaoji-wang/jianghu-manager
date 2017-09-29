@@ -47,6 +47,34 @@ public class SceneServiceImpl implements SceneService {
         createSceneCell(scene);
     }
 
+    @Override
+    public void saveSceneCell(Long id, JsonNode jsonData) {
+        Scene scene = sceneDao.get().byId(id);
+        SceneCell[][] cells = new SceneCell[scene.getHeight()][scene.getWidth()];
+        List<SceneCell> list = sceneCellDao.get().where().eq("scene", scene).list();
+        list.forEach(c -> cells[c.getY()][c.getX()] = c);
+        for (JsonNode row : jsonData.get("cells")) {
+            for (JsonNode c : row) {
+                SceneCell cell = cells[c.get("y").asInt()][c.get("x").asInt()];
+                cell.setName(c.has("name") ? c.get("name").asText() : "");
+                cell.setDescription(c.has("description") ? c.get("description").asText() : "");
+                cell.setEastIn(c.get("eastIn").asBoolean());
+                cell.setEastOut(c.get("eastOut").asBoolean());
+                cell.setSouthEastIn(c.get("southEastIn").asBoolean());
+                cell.setSouthEastOut(c.get("southEastOut").asBoolean());
+                cell.setSouthWestIn(c.get("southWestIn").asBoolean());
+                cell.setSouthWestOut(c.get("southWestOut").asBoolean());
+                cell.setWestIn(c.get("westIn").asBoolean());
+                cell.setWestOut(c.get("westOut").asBoolean());
+                cell.setNorthWestIn(c.get("northWestIn").asBoolean());
+                cell.setNorthWestOut(c.get("northWestOut").asBoolean());
+                cell.setNorthEastIn(c.get("northEastIn").asBoolean());
+                cell.setNorthEastOut(c.get("northEastOut").asBoolean());
+                sceneCellDao.update(cell);
+            }
+        }
+    }
+
     private void createSceneCell(Scene scene) {
         SceneCell[][] map = new SceneCell[scene.getHeight()][scene.getWidth()];
         for (int y = 0; y < map.length; y++) {
