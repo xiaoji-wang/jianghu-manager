@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 import com.jrerdangjia.base.orm.Query;
 import daos.NpcDao;
+import daos.SceneCellDao;
 import models.Npc;
+import models.SceneCell;
 import services.NpcService;
 
 import java.math.BigDecimal;
@@ -16,6 +18,8 @@ import java.util.Map;
 public class NpcServiceImpl implements NpcService {
     @Inject
     private NpcDao npcDao;
+    @Inject
+    private SceneCellDao sceneCellDao;
 
     @Override
     public Npc createNpc(JsonNode jsonData) {
@@ -25,7 +29,9 @@ public class NpcServiceImpl implements NpcService {
             createNpc(jsonData, npc);
             npcDao.update(npc);
         } else {
+            SceneCell sceneCell = sceneCellDao.get().byId(jsonData.get("cellId").asLong());
             npc = new Npc();
+            npc.setSceneCell(sceneCell);
             createNpc(jsonData, npc);
             npcDao.insert(npc);
         }

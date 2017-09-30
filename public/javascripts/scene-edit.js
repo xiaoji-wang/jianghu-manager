@@ -13,11 +13,12 @@ new Vue({
             current: {x: 0, y: 0}
         },
         maps: [],
-        npc: {attack_able: false},
-        npcs: [],
+        npc: {attackAble: false},
+        npcList: [],
         visible: {
-            npcSetting: false,
-            npcList: false
+            settingNpc: false,
+            npcList: false,
+            coordinates: false
         }
     },
     computed: {
@@ -67,16 +68,17 @@ new Vue({
             if (ctx.isPointInPath(this.pixelsPoint.click.x, this.pixelsPoint.click.y)) {
                 this.axisPoint.current = {x: x, y: y}
             }
+            let s = (!map.name || map.name.trim().length === 0) ? (this.visible.coordinates ? x + ',' + y : '') : map.name
             if (x === this.axisPoint.current.x && y === this.axisPoint.current.y) {
                 ctx.fillStyle = 'wheat'
                 ctx.fill()
                 ctx.font = "16px Arial";
-                this.drawText(ctx, '#A52A2A', lx, ly, (!map.name || map.name.trim().length === 0) ? '' : map.name)
+                this.drawText(ctx, '#A52A2A', lx, ly, s)
             } else {
                 ctx.fillStyle = '#fff'
                 ctx.fill()
                 ctx.font = "14px Arial";
-                this.drawText(ctx, '#27408B', lx, ly, (!map.name || map.name.trim().length === 0) ? '' : map.name)
+                this.drawText(ctx, '#27408B', lx, ly, s)
             }
             ctx.closePath()
         },
@@ -98,8 +100,16 @@ new Vue({
         },
         initMaps () {
             this.maps = []
+            this.loading = true
             axios.get('/scene/' + this.getQueryString()['id'] + '/cell').then((response) => {
                 document.title = response.data.scene.name
+                response.data.cells.forEach((row)=> {
+                    row.forEach((cell)=> {
+                        if (!cell.npc) {
+                            cell.npc = []
+                        }
+                    })
+                })
                 this.maps = response.data.cells
                 this.canvas.width = this.width * (this.maps[0].length + 0.5) + 2
                 this.canvas.height = (this.maps.length * 3 + 1) * 0.5 * this.lengthen + 2
@@ -110,6 +120,7 @@ new Vue({
                 let marginTop = div.clientHeight - this.canvas.height
                 this.canvas.style.marginLeft = Math.floor(marginLeft < 0 ? 0 : marginLeft / 2) + 'px'
                 this.canvas.style.marginTop = Math.floor(marginTop < 0 ? 0 : marginTop / 2) + 'px'
+                this.loading = false
             })
         },
         save () {
@@ -130,45 +141,39 @@ new Vue({
         openNpcSetting (id) {
             if (!!id) {
                 axios.get('/npc', {params: {id: id}}).then((response)=> {
+                    debugger
                     this.npc = response.data.data[0]
-                    this.visible.npcSetting = true
+                    this.visible.settingNpc = true
                 })
             } else {
-                this.npc = {attack_able: false}
-                this.visible.npcSetting = true
+                this.npc = {attackAble: false}
+                this.visible.settingNpc = true
             }
         },
         saveNpc () {
             this.loading = true
+            this.npc.cellId = this.current.id
             axios.post('/npc', this.npc).then((response) => {
-                this.npc.id = response.data.id
+                let exists = false
+                for (let i = 0; i < this.current.npc.length; i++) {
+                    if (this.current.npc[i].id == response.data.id) {
+                        this.current.npc[i] = response.data
+                        exists = true
+                        break
+                    }
+                }
+                if (!exists) {
+                    this.current.npc.push(response.data)
+                }
                 this.loading = false
                 this.$message({
                     message: '保存成功', type: 'success'
                 });
+                this.visible.settingNpc = false
             }).catch((response) => {
                 this.loading = false
                 this.$message.error({message: '保存失败'});
             })
-        },
-        deleteNpcTalk (e) {
-        },
-        addNpcToCell () {
-            if (!this.npc.id) {
-                this.$message.error({message: 'NPC未保存'});
-                return
-            }
-            let npcs = this.current.npcs.filter((n)=> {
-                if (n.id === this.npc.id) {
-                    return n
-                }
-            })
-            if (npcs.length <= 0) {
-                this.current.npcs.push(this.npc)
-            } else {
-                this.$message({message: 'NPC已添加'});
-            }
-            this.visible.npcSetting = false
         },
         handleSelect () {
             this.npcsDialogVisible = true

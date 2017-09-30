@@ -3,15 +3,31 @@ package models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "npc")
 public class Npc extends Character {
+    private Long id;
     private String name;
+    private String title;
     private String description;
     private String word;
     private Boolean attackAble = false;
     private SceneCell sceneCell;
+    private Set<ThingDrop> thingDrops = new HashSet<>();
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "npc_id")
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -55,5 +71,31 @@ public class Npc extends Character {
 
     public void setAttackAble(Boolean attackAble) {
         this.attackAble = attackAble;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+//
+//    public Set<ThingDrop> getThings() {
+//        return things;
+//    }
+//
+//    public void setThings(Set<ThingDrop> things) {
+//        this.things = things;
+//    }
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "npc")
+    public Set<ThingDrop> getThingDrops() {
+        return thingDrops;
+    }
+
+    public void setThingDrops(Set<ThingDrop> thingDrops) {
+        this.thingDrops = thingDrops;
     }
 }

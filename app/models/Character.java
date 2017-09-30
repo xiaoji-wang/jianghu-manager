@@ -1,16 +1,14 @@
 package models;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Created by wxji on 2017-09-19.
  */
 @MappedSuperclass
 public abstract class Character {
-    private Long id;
     private Integer level;
     private Integer hp;
     private Integer exp;
@@ -20,18 +18,6 @@ public abstract class Character {
     private Integer maxDefense;
     private BigDecimal critRate;
     private BigDecimal dodgeRate;
-    private Set<Thing> dropThings = new HashSet<>();
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "character_id")
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public Integer getHp() {
         return hp;
@@ -103,17 +89,17 @@ public abstract class Character {
         this.level = level;
     }
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "drop_thing",
-            joinColumns = {@JoinColumn(name = "character_id", referencedColumnName = "character_id")},
-            inverseJoinColumns = {@JoinColumn(name = "thing_id", referencedColumnName = "thing_id")})
-    public Set<Thing> getDropThings() {
-        return dropThings;
-    }
-
-    public void setDropThings(Set<Thing> dropThings) {
-        this.dropThings = dropThings;
-    }
+//    @OneToMany(fetch = FetchType.LAZY)
+//    @JoinTable(name = "drop_thing",
+//            joinColumns = {@JoinColumn(name = "character_id", referencedColumnName = "character_id")},
+//            inverseJoinColumns = {@JoinColumn(name = "thing_id", referencedColumnName = "thing_id")})
+//    public Set<Thing> getDropThings() {
+//        return dropThings;
+//    }
+//
+//    public void setDropThings(Set<Thing> dropThings) {
+//        this.dropThings = dropThings;
+//    }
 
     public Integer getExp() {
         return exp;
@@ -122,4 +108,13 @@ public abstract class Character {
     public void setExp(Integer exp) {
         this.exp = exp;
     }
+
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "character")
+//    public Set<ThingDrop> getThings() {
+//        return things;
+//    }
+//
+//    public void setThings(Set<ThingDrop> things) {
+//        this.things = things;
+//    }
 }

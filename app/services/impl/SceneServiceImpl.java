@@ -31,7 +31,7 @@ public class SceneServiceImpl implements SceneService {
     public Map getSceneCell(Long id, Map<String, String> params) {
         Scene scene = sceneDao.get().byId(id);
         SceneCell[][] cells = new SceneCell[scene.getHeight()][scene.getWidth()];
-        sceneCellDao.get().where().eq("scene", scene).list(params).forEach(c -> cells[c.getY()][c.getX()] = c);
+        sceneCellDao.get().leftJoin("npc").where().eq("scene", scene).list(params).forEach(c -> cells[c.getY()][c.getX()] = c);
         return map("scene", scene, "cells", cells);
     }
 

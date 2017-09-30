@@ -24,7 +24,7 @@ public class NpcController extends BaseController {
     @Transactional
     public Result createNpc() {
         Npc npc = npcService.createNpc(getJsonData());
-        return success("id", npc.getId());
+        return json(npc);
     }
 
     @Transactional

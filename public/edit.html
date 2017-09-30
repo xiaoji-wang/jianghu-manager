@@ -72,6 +72,9 @@
                     <el-form-item label="描述">
                         <el-input type="textarea" :rows="5" v-model="current.description"></el-input>
                     </el-form-item>
+                    <el-form-item label="显示坐标">
+                        <el-switch v-model="visible.coordinates" on-text="" off-text=""></el-switch>
+                    </el-form-item>
                     <div class="hexagon">
                         <el-switch style="top:39px;right:5px;" v-model="current.eastIn" on-text="" off-text=""
                                    @change="switchChange"></el-switch>
@@ -103,7 +106,7 @@
             </el-collapse-item>
             <el-collapse-item title="NPC" name="2">
                 <div>
-                    <el-button type="text" v-for="n in current.npcs" :key="n.id" @click="openNpcSetting(n.id)">
+                    <el-button type="text" v-for="n in current.npc" :key="n.id" @click="openNpcSetting(n.id)">
                         {{n.name}}
                     </el-button>
                 </div>
@@ -119,18 +122,23 @@
             </el-collapse-item>
         </el-collapse>
     </div>
-    <el-button type="primary" v-loading.fullscreen.lock="loading" element-loading-text="正在保存..."
+    <el-button type="primary" v-loading.fullscreen.lock="loading" element-loading-text="请等待..."
                style="position: absolute;bottom: 10px;right: 10px;width: 300px;" @click="save">保存
     </el-button>
-    <el-dialog title="NPC设置窗口" size="small" :visible.sync="visible.npcSetting">
+    <el-dialog title="NPC设置窗口" size="small" :visible.sync="visible.settingNpc">
         <template>
             <el-tabs active-name="view">
                 <el-tab-pane label="基本信息" name="view">
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="2" style="padding-left:10px;line-height: 36px;">名字</el-col>
-                        <el-col :span="22">
+                        <el-col :span="10">
                             <el-input v-model="npc.name" placeholder="名字" icon="search" style="margin-bottom: 10px"
                                       :on-icon-click="handleSelect">
+                            </el-input>
+                        </el-col>
+                        <el-col :span="2" style="padding-left:10px;line-height: 36px;">头衔</el-col>
+                        <el-col :span="10">
+                            <el-input v-model="npc.title" placeholder="头衔" style="margin-bottom: 10px">
                             </el-input>
                         </el-col>
                     </el-row>
@@ -150,55 +158,55 @@
                 </el-tab-pane>
                 <el-tab-pane label="战斗" name="fight">
                     <el-row style="margin-bottom: 10px;">
-                        <el-switch v-model="npc.attack_able"></el-switch>
+                        <el-switch v-model="npc.attackAble"></el-switch>
                     </el-row>
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="2" style="padding-left:10px;line-height: 36px;">等级</el-col>
                         <el-col :span="6">
                             <el-input stype="padding-right:5px;" placeholder="1" v-model="npc.level"
-                                      :disabled="!npc.attack_able"></el-input>
+                                      :disabled="!npc.attackAble"></el-input>
                         </el-col>
                         <el-col :span="2" style="padding-left:10px;line-height: 36px;">经验值</el-col>
                         <el-col :span="6">
                             <el-input stype="padding-right:5px;" placeholder="1" v-model="npc.exp"
-                                      :disabled="!npc.attack_able"></el-input>
+                                      :disabled="!npc.attackAble"></el-input>
                         </el-col>
                         <el-col :span="2" style="padding-left:10px;line-height: 36px;">生命值</el-col>
                         <el-col :span="6">
                             <el-input stype="padding-right:5px;" placeholder="10" v-model="npc.hp"
-                                      :disabled="!npc.attack_able"></el-input>
+                                      :disabled="!npc.attackAble"></el-input>
                         </el-col>
                     </el-row>
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="2" style="padding-left:10px;line-height: 36px;">攻击</el-col>
                         <el-col :span="6">
                             <el-input stype="padding-right:5px;" placeholder="1" v-model="npc.minAttack"
-                                      :disabled="!npc.attack_able"></el-input>
+                                      :disabled="!npc.attackAble"></el-input>
                         </el-col>
                         <el-col :span="2" style="padding-left:10px;line-height: 36px;">防御</el-col>
                         <el-col :span="6">
                             <el-input stype="padding-right:5px;" placeholder="1"
-                                      v-model="npc.minDefense" :disabled="!npc.attack_able"></el-input>
+                                      v-model="npc.minDefense" :disabled="!npc.attackAble"></el-input>
                         </el-col>
                     </el-row>
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="6" :offset="2">
                             <el-input stype="padding-right:5px;" placeholder="5" v-model="npc.maxAttack"
-                                      :disabled="!npc.attack_able"></el-input>
+                                      :disabled="!npc.attackAble"></el-input>
                         </el-col>
                         <el-col :span="6" :offset="2">
                             <el-input stype="padding-right:5px;" placeholder="5"
-                                      v-model="npc.maxDefense" :disabled="!npc.attack_able"></el-input>
+                                      v-model="npc.maxDefense" :disabled="!npc.attackAble"></el-input>
                         </el-col>
                     </el-row>
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="2" style="padding-left:10px;line-height: 36px;">暴击率</el-col>
                         <el-col :span="6">
-                            <el-input v-model="npc.critRate" placeholder="0" :disabled="!npc.attack_able"></el-input>
+                            <el-input v-model="npc.critRate" placeholder="0" :disabled="!npc.attackAble"></el-input>
                         </el-col>
                         <el-col :span="2" style="padding-left:10px;line-height: 36px;">躲闪率</el-col>
                         <el-col :span="6">
-                            <el-input v-model="npc.dodgeRate" placeholder="0" :disabled="!npc.attack_able"></el-input>
+                            <el-input v-model="npc.dodgeRate" placeholder="0" :disabled="!npc.attackAble"></el-input>
                         </el-col>
                     </el-row>
                     <el-row>
@@ -215,7 +223,7 @@
                                     <el-table-column label="品质" width="100">
                                     </el-table-column>
                                 </el-table>
-                                <el-button type="text" style="width: 100%;" :disabled="!npc.attack_able">添加掉落物品
+                                <el-button type="text" style="width: 100%;" :disabled="!npc.attackAble">添加掉落物品
                                 </el-button>
                             </template>
                         </el-col>
@@ -226,14 +234,14 @@
             </el-tabs>
         </template>
         <div slot="footer" class="dialog-footer">
-            <el-button @click="visible.npcSetting = false">取消</el-button>
+            <el-button @click="visible.settingNpc = false">取消</el-button>
             <el-button @click="saveNpc">保存</el-button>
-            <el-button type="primary" @click="addNpcToCell">添加</el-button>
+            <!--<el-button type="primary" @click="addNpcToCell">添加</el-button>-->
         </div>
     </el-dialog>
     <el-dialog title="NPC选择列表" :visible.sync="visible.npcList" size="small" @open="npcsDialogOpen">
         <template>
-            <el-table :data="npcs" border style="width: 100%">
+            <el-table :data="npcList" border style="width: 100%">
                 <el-table-column type="selection" width="55"></el-table-column>
                 <el-table-column prop="name" label="名称"></el-table-column>
             </el-table>

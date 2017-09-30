@@ -9,6 +9,7 @@ public class Thing {
     private String name;
     private String description;
     private Integer price;
+    private Quality quality = Quality.GRAY;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,5 +44,18 @@ public class Thing {
 
     public void setPrice(Integer price) {
         this.price = price;
+    }
+
+    @Enumerated(EnumType.STRING)
+    public Quality getQuality() {
+        return quality;
+    }
+
+    public void setQuality(Quality quality) {
+        this.quality = quality;
+    }
+
+    public enum Quality {
+        GRAY, WHITE, GREEN, BLUE, PURPLE, ORANGE
     }
 }
