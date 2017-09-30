@@ -51,7 +51,7 @@ public class NpcServiceImpl implements NpcService {
         npc.setName(jsonData.has("name") ? jsonData.get("name").asText("") : "");
         npc.setDescription(jsonData.has("description") ? jsonData.get("description").asText("") : "");
         npc.setWord(jsonData.has("word") ? jsonData.get("word").asText("...") : "");
-        npc.setAttackAble(jsonData.has("attack_able") && jsonData.get("attack_able").asBoolean(false));
+        npc.setAttackAble(jsonData.has("attackAble") && jsonData.get("attackAble").asBoolean(false));
         npc.setLevel(jsonData.has("level") ? jsonData.get("level").asInt(1) : 1);
         npc.setExp(jsonData.has("exp") ? jsonData.get("exp").asInt(1) : 1);
         npc.setHp(jsonData.has("hp") ? jsonData.get("hp").asInt(10) : 10);
