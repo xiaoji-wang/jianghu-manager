@@ -1,4 +1,4 @@
-package models;
+package models.task;
 
 public class TaskNode {
     String name;

@@ -1,4 +1,7 @@
-package models;
+package models.thing;
+
+import models.character.Monster;
+import models.character.Npc;
 
 import javax.persistence.*;
 import java.math.BigDecimal;

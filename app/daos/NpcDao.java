@@ -1,6 +1,6 @@
 package daos;
 
-import models.Npc;
+import models.character.Npc;
 
 /**
  * Created by wxji on 2017-09-18.

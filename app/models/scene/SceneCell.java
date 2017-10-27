@@ -1,6 +1,7 @@
-package models;
+package models.scene;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import models.character.Npc;
 
 import javax.persistence.*;
 import java.util.HashSet;

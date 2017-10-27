@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 import daos.SceneCellDao;
 import daos.SceneDao;
-import models.Scene;
-import models.SceneCell;
+import models.scene.Scene;
+import models.scene.SceneCell;
 import services.SceneService;
 
 import java.util.List;

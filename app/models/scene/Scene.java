@@ -1,4 +1,4 @@
-package models;
+package models.scene;
 
 import javax.persistence.*;
 import java.util.HashSet;

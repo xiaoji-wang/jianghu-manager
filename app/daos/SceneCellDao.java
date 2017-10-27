@@ -1,6 +1,6 @@
 package daos;
 
-import models.SceneCell;
+import models.scene.SceneCell;
 
 /**
  * Created by wxji on 2017-09-18.

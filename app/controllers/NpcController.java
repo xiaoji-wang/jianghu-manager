@@ -2,7 +2,7 @@ package controllers;
 
 import com.google.inject.Inject;
 import controllers.base.BaseController;
-import models.Npc;
+import models.character.Npc;
 import play.data.FormFactory;
 import play.db.jpa.Transactional;
 import play.mvc.Result;

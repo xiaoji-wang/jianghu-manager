@@ -1,6 +1,6 @@
 package daos;
 
-import models.Scene;
+import models.scene.Scene;
 
 /**
  * Created by wxji on 2017-09-18.

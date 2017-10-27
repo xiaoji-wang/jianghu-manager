@@ -5,8 +5,8 @@ import com.google.inject.Inject;
 import com.jrerdangjia.base.orm.Query;
 import daos.NpcDao;
 import daos.SceneCellDao;
-import models.Npc;
-import models.SceneCell;
+import models.character.Npc;
+import models.scene.SceneCell;
 import services.NpcService;
 
 import java.math.BigDecimal;

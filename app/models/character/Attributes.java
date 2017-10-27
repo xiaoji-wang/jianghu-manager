@@ -1,4 +1,4 @@
-package models;
+package models.character;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
@@ -8,7 +8,7 @@ import java.math.BigDecimal;
  * Created by wxji on 2017-09-19.
  */
 @MappedSuperclass
-public abstract class Character {
+public abstract class Attributes {
     private Integer level;
     private Integer hp;
     private Integer exp;

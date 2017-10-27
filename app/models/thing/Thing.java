@@ -1,4 +1,4 @@
-package models;
+package models.thing;
 
 import javax.persistence.*;
 

@@ -1,4 +1,6 @@
-package models;
+package models.character;
+
+import models.thing.ThingDrop;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -6,7 +8,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "monster")
-public class Monster extends Character {
+public class Monster extends Attributes {
     private Long id;
     private String name;
     private String description;

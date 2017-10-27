@@ -1,6 +1,8 @@
-package models;
+package models.character;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import models.scene.SceneCell;
+import models.thing.ThingDrop;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -8,7 +10,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "npc")
-public class Npc extends Character {
+public class Npc extends Attributes {
     private Long id;
     private String name;
     private String title;

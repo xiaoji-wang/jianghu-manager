@@ -2,7 +2,7 @@ package services;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.ImplementedBy;
-import models.Npc;
+import models.character.Npc;
 import services.impl.NpcServiceImpl;
 
 import java.util.Map;
