@@ -1,12 +1,14 @@
 package models.kung.fu;
 
+import models.calculation.Formula;
+
 import javax.persistence.*;
 
 /**
  * Created by wxji on 2017-10-23.
  */
 @Entity
-@Table(name = "kung_fu")
+@Table(name = "kung_fu_act")
 public class KungFuAct {
     private Long id;
     private KungFu kungFu;
@@ -15,10 +17,11 @@ public class KungFuAct {
     private Boolean isAOE = false;
     private Boolean isHeal = false;
     private Boolean isSustained = false;
+    private Boolean isDistance = false;
     private Integer cd = 0;
     private Integer sequence = 0;
-    private String valueFormula;
-    private String kiFormula;
+    private Formula value;
+    private Formula ki;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -100,21 +103,32 @@ public class KungFuAct {
         this.sequence = sequence;
     }
 
-    @Column(name = "value_formula")
-    public String getValueFormula() {
-        return valueFormula;
+    @Column(name = "is_distance")
+    public Boolean getDistance() {
+        return isDistance;
     }
 
-    public void setValueFormula(String valueFormula) {
-        this.valueFormula = valueFormula;
+    public void setDistance(Boolean distance) {
+        isDistance = distance;
     }
 
-    @Column(name = "ki_formula")
-    public String getKiFormula() {
-        return kiFormula;
+    @OneToOne
+    @JoinColumn(name = "value")
+    public Formula getValue() {
+        return value;
     }
 
-    public void setKiFormula(String kiFormula) {
-        this.kiFormula = kiFormula;
+    public void setValue(Formula value) {
+        this.value = value;
+    }
+
+    @OneToOne
+    @JoinColumn(name = "ki")
+    public Formula getKi() {
+        return ki;
+    }
+
+    public void setKi(Formula ki) {
+        this.ki = ki;
     }
 }

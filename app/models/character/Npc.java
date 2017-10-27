@@ -1,6 +1,7 @@
 package models.character;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import models.kung.fu.CharacterKungFu;
 import models.scene.SceneCell;
 import models.thing.ThingDrop;
 
@@ -19,6 +20,7 @@ public class Npc extends Attributes {
     private Boolean attackAble = false;
     private SceneCell sceneCell;
     private Set<ThingDrop> thingDrops = new HashSet<>();
+    private Set<CharacterKungFu> characterKungFus = new HashSet<>();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -83,15 +85,6 @@ public class Npc extends Attributes {
         this.title = title;
     }
 
-//
-//    public Set<ThingDrop> getThings() {
-//        return things;
-//    }
-//
-//    public void setThings(Set<ThingDrop> things) {
-//        this.things = things;
-//    }
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "npc")
     public Set<ThingDrop> getThingDrops() {
         return thingDrops;
@@ -99,5 +92,14 @@ public class Npc extends Attributes {
 
     public void setThingDrops(Set<ThingDrop> thingDrops) {
         this.thingDrops = thingDrops;
+    }
+
+    @OneToMany
+    public Set<CharacterKungFu> getCharacterKungFus() {
+        return characterKungFus;
+    }
+
+    public void setCharacterKungFus(Set<CharacterKungFu> characterKungFus) {
+        this.characterKungFus = characterKungFus;
     }
 }
